@@ -16,6 +16,7 @@ export const useWeather = () =>{
     const [weatherInfo, setWeatherInfo] = useState<Weather>(initialState)
 
     const [loading, setLoading] = useState<boolean>(false)
+    const [notFound, setNotFound] = useState<boolean>(false)
     
     const fetchWeather = async (search: ISearchState) =>{
         const appid = import.meta.env.VITE_API_KEY
@@ -23,10 +24,13 @@ export const useWeather = () =>{
 
         setLoading(true)
         setWeatherInfo(initialState)
+        setNotFound(false)
+
         try{
 
             const urlCoordinates = `${apiUrl}geo/1.0/direct?q=${search.city},${search.country}&appid=${appid}`
             const {data: coordinates} = await axios(urlCoordinates)
+            if(coordinates[0])return setNotFound(true)
             const {lat, lon} = coordinates[0];
 
             const urlWeather = `${apiUrl}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${appid}`
@@ -64,7 +68,9 @@ export const useWeather = () =>{
         setWeatherInfo,
         hasWeatherData,
         loading,
-        setLoading
+        setLoading,
+        notFound,
+        setNotFound
   
     }
 }
