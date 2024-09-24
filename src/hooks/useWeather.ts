@@ -30,7 +30,7 @@ export const useWeather = () =>{
 
             const urlCoordinates = `${apiUrl}geo/1.0/direct?q=${search.city},${search.country}&appid=${appid}`
             const {data: coordinates} = await axios(urlCoordinates)
-            if(coordinates[0])return setNotFound(true)
+            if(!coordinates[0])return setNotFound(true)
             const {lat, lon} = coordinates[0];
 
             const urlWeather = `${apiUrl}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${appid}`
@@ -38,7 +38,6 @@ export const useWeather = () =>{
            const result = Weather.safeParse(dataWeather) // ZOD
             // const result = isWeatherResponse(dataWeather)
             if(result.success){
-                console.log(result.data)
                 setWeatherInfo(result.data)
 
             }
